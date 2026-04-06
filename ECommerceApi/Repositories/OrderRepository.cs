@@ -52,13 +52,18 @@ public class OrderRepository : IOrderRepository
 
             transaction.Commit();
 
+            // set the OrderId on each item so the resp is complete
+            foreach (var item in items)
+                item.OrderId = orderId;
+
             return new Order
             {
                 Id = orderId,
                 UserId = userId,
                 ShippingAddress = shippingAddress,
                 TotalPrice = totalPrice,
-                CreatedAt = createdAt
+                CreatedAt = createdAt,
+                Items = items
             };
         }
         catch
@@ -74,22 +79,45 @@ public class OrderRepository : IOrderRepository
 
         using var connection = new SqlConnection(_connectionString);
         using var command = new SqlCommand(
-            "SELECT Id, UserId, ShippingAddress, TotalPrice, CreatedAt FROM Orders WHERE UserId = @UserId ORDER BY CreatedAt DESC", connection);
+            @"SELECT o.Id, o.UserId, o.ShippingAddress, o.TotalPrice, o.CreatedAt,
+                     oi.Id, oi.ProductId, oi.Quantity, oi.UnitPrice
+              FROM Orders o
+              LEFT JOIN OrderItems oi ON o.Id = oi.OrderId
+              WHERE o.UserId = @UserId
+              ORDER BY o.CreatedAt DESC, o.Id", connection);
 
         command.Parameters.AddWithValue("@UserId", userId);
         connection.Open();
         using var reader = command.ExecuteReader();
 
+        Order? currentOrder = null;
         while (reader.Read())
         {
-            orders.Add(new Order
+            var orderId = reader.GetInt32(0);
+            if (currentOrder == null || currentOrder.Id != orderId)
             {
-                Id = reader.GetInt32(0),
-                UserId = reader.GetInt32(1),
-                ShippingAddress = reader.GetString(2),
-                TotalPrice = reader.GetDecimal(3),
-                CreatedAt = reader.GetDateTime(4)
-            });
+                currentOrder = new Order
+                {
+                    Id = orderId,
+                    UserId = reader.GetInt32(1),
+                    ShippingAddress = reader.GetString(2),
+                    TotalPrice = reader.GetDecimal(3),
+                    CreatedAt = reader.GetDateTime(4)
+                };
+                orders.Add(currentOrder);
+            }
+
+            if (!reader.IsDBNull(5))
+            {
+                currentOrder.Items.Add(new OrderItem
+                {
+                    Id = reader.GetInt32(5),
+                    OrderId = orderId,
+                    ProductId = reader.GetInt32(6),
+                    Quantity = reader.GetInt32(7),
+                    UnitPrice = reader.GetDecimal(8)
+                });
+            }
         }
 
         return orders;

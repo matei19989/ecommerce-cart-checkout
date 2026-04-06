@@ -23,7 +23,7 @@ public class AuthService : IAuthService
     {
         var existing = _userRepository.GetByEmail(request.Email);
         if (existing != null)
-            throw new Exception("Email already registered.");
+            throw new InvalidOperationException("Email already registered.");
 
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
         var user = _userRepository.Create(request.Name, request.Email, passwordHash);
@@ -40,7 +40,7 @@ public class AuthService : IAuthService
     {
         var user = _userRepository.GetByEmail(request.Email);
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            throw new Exception("Invalid email or password.");
+            throw new UnauthorizedAccessException("Invalid email or password.");
 
         return new AuthResponse
         {

@@ -20,7 +20,7 @@ public class OrderService : IOrderService
     {
         var cartItems = _cartRepository.GetByUserId(userId);
         if (cartItems.Count == 0)
-            throw new Exception("Cart is empty.");
+            throw new InvalidOperationException("Cart is empty.");
 
         // calculate total from product database, NOT from frontend
         var orderItems = new List<OrderItem>();
@@ -29,7 +29,7 @@ public class OrderService : IOrderService
         foreach (var cartItem in cartItems)
         {
             var product = _productRepository.GetById(cartItem.ProductId);
-            if (product == null) continue;
+            if (product == null) throw new KeyNotFoundException($"Product with ID {cartItem.ProductId} not found.");
 
             var unitPrice = product.Price;
             totalPrice += unitPrice * cartItem.Quantity;
