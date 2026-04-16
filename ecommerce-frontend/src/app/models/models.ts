@@ -17,6 +17,11 @@ export interface CartItem {
     imageUrl : string | null;
 }
 
+export interface CartItemDto {
+    productId : number;
+    quantity : number;
+}
+
 export interface RegisterRequest {
     name : string;
     email : string;
