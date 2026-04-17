@@ -3,19 +3,19 @@
     <h2 class="text-3xl font-extralight tracking-tight text-neutral-900 mb-2">Products</h2>
     <p class="text-sm text-neutral-500 mb-10">Browse our catalog.</p>
 
-    @if (loading) {
+    @if (loading()) {
       <p class="text-neutral-500">Loading...</p>
     }
 
-    @if (error) {
-      <div class="text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded-sm px-4 py-2.5 mb-6">{{ error }}</div>
+    @if (error()) {
+      <div class="text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded-sm px-4 py-2.5 mb-6">{{ error() }}</div>
     }
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      @for (product of products; track product.id) {
+      @for (product of products(); track product.id) {
         <div class="border border-neutral-200 p-4 flex flex-col hover:border-amber-500 transition-colors">
           @if (product.imageUrl) {
-            <img [src]="product.imageUrl" [alt]="product.name" class="w-full h-64 object-cover mb-4" />
+            <img [src]="apiHost + product.imageUrl" [alt]="product.name" class="w-full h-64 object-cover mb-4" />
           } @else {
             <div class="w-full h-64 bg-neutral-100 mb-4 flex items-center justify-center text-neutral-400 text-xs uppercase tracking-widest">No image</div>
           }

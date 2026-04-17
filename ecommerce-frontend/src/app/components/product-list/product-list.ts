@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , signal} from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import { ProductService } from '../../services/product';
 import { CartService } from '../../services/cart';
 import { AuthService } from '../../services/auth';
 import { Router } from '@angular/router';
 import { Product } from '../../models/models';
-import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-product-list',
@@ -12,9 +12,10 @@ import { CurrencyPipe } from '@angular/common';
   templateUrl: './product-list.html'
 })
 export class ProductList implements OnInit {
-  products: Product[] = [];
-  loading = true;
-  error = '';
+  products = signal<Product[]>([]);
+  loading = signal(true);
+  error = signal('');
+  readonly apiHost = 'http://localhost:5284';
 
   constructor(
     private productService: ProductService,
@@ -24,14 +25,19 @@ export class ProductList implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.loadProducts();
+  }
+
+  loadProducts() {
+    this.loading.set(true);
     this.productService.getAll().subscribe({
       next: (products) => {
-        this.products = products;
-        this.loading = false;
+        this.products.set(products);
+        this.loading.set(false);
       },
       error: () => {
-        this.error = 'Failed to load products';
-        this.loading = false;
+        this.error.set('Failed to load products');
+        this.loading.set(false);
       }
     });
   }
