@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { CartService } from '../../services/cart';
@@ -11,8 +11,8 @@ import { CartItem } from '../../models/models';
   templateUrl: './cart.html'
 })
 export class Cart implements OnInit {
-  items: CartItem[] = [];
-  loading = true;
+  items = signal<CartItem[]>([]);
+  loading = signal(true);
 
   constructor(
     private cartService: CartService,
@@ -31,10 +31,10 @@ export class Cart implements OnInit {
   loadCart() {
     this.cartService.loadCart().subscribe({
       next: (items) => {
-        this.items = items;
-        this.loading = false;
+        this.items.set(items);
+        this.loading.set(false);
       },
-      error: () => this.loading = false
+      error: () => this.loading.set(false)
     });
   }
 
@@ -51,6 +51,6 @@ export class Cart implements OnInit {
   }
 
   getTotal(): number {
-    return this.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    return this.items().reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
 }

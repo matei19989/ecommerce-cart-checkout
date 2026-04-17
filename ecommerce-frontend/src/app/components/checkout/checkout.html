@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-white px-4 py-12">
   <div class="max-w-md mx-auto">
-    @if (success) {
+    @if (success()) {
       <div class="text-center">
         <h2 class="text-3xl font-extralight tracking-tight text-neutral-900 mb-2">Order Placed</h2>
         <p class="text-sm text-neutral-500 mb-8">Thank you for your purchase.</p>
@@ -13,8 +13,8 @@
       <h2 class="text-3xl font-extralight tracking-tight text-neutral-900 mb-2">Checkout</h2>
       <p class="text-sm text-neutral-500 mb-10">Enter your shipping details.</p>
 
-      @if (error) {
-        <div class="text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded-sm px-4 py-2.5 mb-6">{{ error }}</div>
+      @if (error()) {
+        <div class="text-sm text-rose-600 bg-rose-50 border border-rose-200 rounded-sm px-4 py-2.5 mb-6">{{ error() }}</div>
       }
 
       <form (ngSubmit)="placeOrder()" class="space-y-6">

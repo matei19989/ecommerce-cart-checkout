@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { OrderService } from '../../services/order';
@@ -11,8 +11,8 @@ import { CartService } from '../../services/cart';
 })
 export class Checkout {
   shippingAddress = '';
-  error = '';
-  success = false;
+  error = signal('');
+  success = signal(false);
 
   constructor(
     private orderService: OrderService,
@@ -22,16 +22,16 @@ export class Checkout {
 
   placeOrder() {
     if (!this.shippingAddress.trim()) {
-      this.error = 'Shipping address is required.';
+      this.error.set('Shipping address is required.');
       return;
     }
 
     this.orderService.checkout(this.shippingAddress).subscribe({
       next: () => {
-        this.success = true;
+        this.success.set(true);
         this.cartService.clearLocal();
       },
-      error: (err) => this.error = err.error?.message || 'Checkout failed'
+      error: (err) => this.error.set(err.error?.message || 'Checkout failed')
     });
   }
 }

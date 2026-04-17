@@ -3,18 +3,18 @@
     <h2 class="text-3xl font-extralight tracking-tight text-neutral-900 mb-2">Your Cart</h2>
     <p class="text-sm text-neutral-500 mb-10">Review your items before checkout.</p>
 
-    @if (loading) {
+    @if (loading()) {
       <p class="text-sm text-neutral-500 uppercase tracking-widest">Loading...</p>
     }
 
-    @if (!loading && items.length === 0) {
+    @if (!loading() && items().length === 0) {
       <p class="text-neutral-500">Your cart is empty.</p>
       <a routerLink="/products" class="text-amber-600 hover:text-amber-700 text-sm mt-2 inline-block">Browse products</a>
     }
 
-    @if (items.length > 0) {
+    @if (items().length > 0) {
       <div class="space-y-4 mb-8">
-        @for (item of items; track item.productId) {
+        @for (item of items(); track item.productId) {
           <div class="flex items-center justify-between border-b border-neutral-200 pb-4">
             <div class="flex-1">
               <h3 class="text-sm font-medium text-neutral-900">{{ item.productName }}</h3>
