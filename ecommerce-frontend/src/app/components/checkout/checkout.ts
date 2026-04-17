@@ -17,7 +17,7 @@ export class Checkout {
   constructor(
     private orderService: OrderService,
     private cartService: CartService,
-    private router: Router
+    public router: Router
   ) {}
 
   placeOrder() {
