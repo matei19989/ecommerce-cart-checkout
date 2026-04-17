@@ -1,1 +1,28 @@
-<p>navbar works!</p>
+<nav class="border-b border-neutral-200 bg-white">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <a routerLink="/products" class="text-lg font-light tracking-tight text-neutral-900">Shop</a>
+
+    <div class="flex items-center gap-6">
+      <a routerLink="/products" class="text-xs uppercase tracking-widest text-neutral-500 hover:text-neutral-900 transition-colors">Products</a>
+      <a routerLink="/cart" class="text-xs uppercase tracking-widest text-neutral-500 hover:text-neutral-900 transition-colors relative">
+        Cart
+        @if (cartService.getItemCount() > 0) {
+          <span class="absolute -top-2 -right-4 bg-amber-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
+            {{ cartService.getItemCount() }}
+          </span>
+        }
+      </a>
+
+      @if (authService.isLoggedIn$ | async) {
+        <span class="text-xs text-neutral-400">{{ authService.getUserName() }}</span>
+        <button (click)="logout()"
+          class="text-xs uppercase tracking-widest text-neutral-500 hover:text-neutral-900 transition-colors cursor-pointer">
+          Logout
+        </button>
+      } @else {
+        <a routerLink="/login" class="text-xs uppercase tracking-widest text-neutral-500 hover:text-neutral-900 transition-colors">Login</a>
+        <a routerLink="/register" class="text-xs uppercase tracking-widest text-amber-600 hover:text-amber-700 transition-colors">Register</a>
+      }
+    </div>
+  </div>
+</nav>
