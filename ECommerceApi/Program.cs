@@ -65,7 +65,6 @@ app.UseExceptionHandler(_ => { });
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseCors("AllowAngular");
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
