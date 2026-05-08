@@ -1,4 +1,4 @@
-namespace ECommerceApi.Services;
+namespace ECommerceApi.Auth;
 
 public interface ICurrentUser
 {

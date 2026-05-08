@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ECommerceApi.Auth;
 using ECommerceApi.Models.DTOs;
 using ECommerceApi.Services;
 

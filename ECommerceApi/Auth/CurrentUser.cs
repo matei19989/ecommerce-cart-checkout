@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace ECommerceApi.Services;
+namespace ECommerceApi.Auth;
 
 public class CurrentUser : ICurrentUser
 {

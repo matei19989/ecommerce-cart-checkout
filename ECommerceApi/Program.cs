@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using ECommerceApi.Auth;
 using ECommerceApi.Middleware;
 using ECommerceApi.Repositories;
 using ECommerceApi.Services;
