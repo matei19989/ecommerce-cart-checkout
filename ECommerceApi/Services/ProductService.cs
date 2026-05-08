@@ -13,5 +13,7 @@ public class ProductService : IProductService
     }
 
     public List<Product> GetAll() => _productRepository.GetAll();
-    public Product? GetById(int id) => _productRepository.GetById(id);
+    public Product GetById(int id) =>
+        _productRepository.GetById(id)
+            ?? throw new KeyNotFoundException($"Product {id} not found.");
 }

@@ -8,25 +8,22 @@ namespace ECommerceApi.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class OrdersController : BaseAuthController
+public class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;
+    private readonly ICurrentUser _currentUser;
 
-    public OrdersController(IOrderService orderService)
+    public OrdersController(IOrderService orderService, ICurrentUser currentUser)
     {
         _orderService = orderService;
+        _currentUser = currentUser;
     }
 
     [HttpPost("checkout")]
-    public IActionResult Checkout(CheckoutRequest request)
-    {
-        var order = _orderService.Checkout(GetUserId(), request.ShippingAddress);
-        return Ok(order);
-    }
+    public IActionResult Checkout(CheckoutRequest request) =>
+        Ok(_orderService.Checkout(_currentUser.Id, request.ShippingAddress));
 
     [HttpGet]
-    public IActionResult GetOrders()
-    {
-        return Ok(_orderService.GetUserOrders(GetUserId()));
-    }
+    public IActionResult GetOrders() =>
+        Ok(_orderService.GetUserOrders(_currentUser.Id));
 }

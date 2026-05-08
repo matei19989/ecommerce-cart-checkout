@@ -15,16 +15,8 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll()
-    {
-        return Ok(_productService.GetAll());
-    }
+    public IActionResult GetAll() => Ok(_productService.GetAll());
 
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
-    {
-        var product = _productService.GetById(id);
-        if (product == null) return NotFound();
-        return Ok(product);
-    }
+    public IActionResult GetById(int id) => Ok(_productService.GetById(id));
 }
